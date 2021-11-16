@@ -694,20 +694,73 @@ public class BinaryTree {
         return max;
     }
 
-
     /**
-     * 给定一个二叉树，计算 整个树 的坡度 。
-     *
-     * 一个树的 节点的坡度 定义即为，该节点左子树的节点之和和右子树节点之和的 差的绝对值 。
-     * 如果没有左子树的话，左子树的节点之和为 0 ；没有右子树的话也是一样。空结点的坡度是 0 。
-     *
-     * 整个树 的坡度就是其所有节点的坡度之和。
+     * 给出一棵二叉树，其上每个结点的值都是0或1。
+     * 每一条从根到叶的路径都代表一个从最高有效位开始的二进制数。
+     * 例如，如果路径为0 -> 1 -> 1 -> 0 -> 1，那么它表示二进制数01101，也就是13。
+     * 对树上的每一片叶子，我们都要找出从根到该叶子的路径所表示的数字。
+     * 返回这些数字之和。题目数据保证答案是一个 32 位 整数。
      *
      * @param root
      * @return
      */
-    public int findTilt(TreeNode root) {
-        return  -1;
+    private int _sum = 0;
+    public int sumRootToLeaf(TreeNode root) {
+        sumRootToLeaf(root, 0);
+        return _sum;
+    }
+    private void sumRootToLeaf(TreeNode root, int sum) {
+        if (root == null) return;
+        sum <<= 1;
+        sum += root.val;
+        sumRootToLeaf(root.left, sum);
+        sumRootToLeaf(root.right, sum);
+        if (root.left == null && root.right == null){
+            _sum += sum;
+        }
     }
 
+    /**
+     * 给定一个二叉树，计算 整个树 的坡度 。
+     * 一个树的 节点的坡度 定义即为，该节点左子树的节点之和和右子树节点之和的 差的绝对值 。
+     * 如果没有左子树的话，左子树的节点之和为 0 ；没有右子树的话也是一样。空结点的坡度是 0 。
+     * 整个树 的坡度就是其所有节点的坡度之和。
+     * @param root
+     * @return
+     */
+    public int findTilt(TreeNode root) {
+        if(root == null) return 0;
+        return Math.abs(sum(root.left) - sum(root.right))
+                + findTilt(root.left)
+                + findTilt(root.right);
+    }
+
+    public int sum(TreeNode root){
+        if(root == null) return 0;
+        return root.val
+                + sum(root.left)
+                + sum(root.right);
+    }
+
+    /**
+     * 给你一棵 完全二叉树 的根节点 root ，求出该树的节点个数。
+     * 完全二叉树 的定义如下：在完全二叉树中，除了最底层节点可能没填满外，
+     * 其余每层节点数都达到最大值，并且最下面一层的节点都集中在该层最左边的若干位置。
+     * 若最底层为第 h 层，则该层包含 1~2h个节点。
+     * @param root
+     * @return
+     */
+    public int countNodes(TreeNode root) {
+        if (root == null) return 0;
+        int dl = depth(root.left), dr = depth(root.right);
+        if (dl == dr){
+            return (1 << dl) + countNodes(root.right);
+        }else {
+            return (1 << dr) + countNodes(root.left);
+        }
+    }
+    private int depth(TreeNode root){
+        if (root == null) return 0;
+        return Math.max(depth(root.left), depth(root.right)) + 1;
+    }
 }
