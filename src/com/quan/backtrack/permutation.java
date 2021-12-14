@@ -10,34 +10,26 @@ public class permutation {
     public String[] permutation(String s) {
         if (s == null || s.length() == 0) return new String[0];
         Set<String> result = new HashSet<>();
-        LinkedList<Integer> visited = new LinkedList<>();
-
+        boolean[] visited = new boolean[s.length()];
         backtrack(s, visited, result, new StringBuilder());
-
         int size = result.size();
         String[] ans = new String[size];
-        int i = 0;
-        for (String res : result) {
-            ans[i] = res;
-            i++;
-        }
+        result.toArray(ans);
         return ans;
     }
 
-    private void backtrack(String s, LinkedList<Integer> visited, Set<String> result, StringBuilder path){
-        if (s.length() == visited.size()){
+    private void backtrack(String s, boolean[] visited, Set<String> result, StringBuilder path){
+        if (s.length() == path.length()){
             result.add(path.toString());
             return;
         }
         for (int i = 0; i < s.length(); i++) {
-            if (visited.contains(i)){
-                continue;
-            }
+            if (visited[i]) continue;
             path.append(s.charAt(i));
-            visited.add(i);
+            visited[i] = true;
             backtrack(s, visited,result, path);
             path.deleteCharAt(path.length() - 1);
-            visited.removeLast();
+            visited[i] = false;
         }
     }
 }

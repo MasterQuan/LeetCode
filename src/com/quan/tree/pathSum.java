@@ -37,12 +37,6 @@ public class pathSum {
         sum(root.right, targetSum - root.val);
         sum(root.left, targetSum - root.val);
     }
-
-    public List<List<Integer>> pathSum2(TreeNode root, int targetSum) {
-
-        return null;
-    }
-
 }
 
 
